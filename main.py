@@ -1,7 +1,7 @@
 from imageclass import ImageClassifier
 from imageclass import ImageClass
 
-images_classifier = ImageClassifier(10, 2)
+images_classifier = ImageClassifier(25, 5)
 
 camel_images_train, camel_images_test = images_classifier.read_images('028.camel', 'camel')
 dog_images_train, dog_images_test = images_classifier.read_images('056.dog', 'dog')
@@ -29,14 +29,24 @@ images_classifier.create_rgb_histogram(horse_images_test)
 
 train_images = camel_images_train + dog_images_train + dolphin_images_train + giraffe_images_train + goose_images_train + horse_images_train
 
-for test_image in camel_images_test:
-    images_classifier.show_images(test_image, images_classifier.calculate_five_most_similar_image(train_images, test_image))
+for i, test_image in enumerate(camel_images_test):
+    images_classifier.write_output_images('rgb_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_rgb(train_images, test_image), 'camel', i)
 
 for i, test_image in enumerate(dolphin_images_test):
-    images_classifier.write_output_images(test_image, images_classifier.calculate_five_most_similar_image_with_rgb(train_images, test_image), 'dolphin', i)
+    images_classifier.write_output_images('rgb_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_rgb(train_images, test_image), 'dolphin', i)
+
+for i, test_image in enumerate(dog_images_test):
+    images_classifier.write_output_images('rgb_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_rgb(train_images, test_image), 'dog', i)
+
+for i, test_image in enumerate(giraffe_images_test):
+    images_classifier.write_output_images('rgb_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_rgb(train_images, test_image), 'giraffe', i)
+
+for i, test_image in enumerate(goose_images_test):
+    images_classifier.write_output_images('rgb_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_rgb(train_images, test_image), 'goose', i)
+
+for i, test_image in enumerate(horse_images_test):
+    images_classifier.write_output_images('rgb_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_rgb(train_images, test_image), 'horse', i)
 '''
-
-
 
 ''':arg image retrieval with hsv histogram
 '''
@@ -57,5 +67,20 @@ images_classifier.create_hsv_histogram(horse_images_test)
 train_images = camel_images_train + dog_images_train + dolphin_images_train + giraffe_images_train + goose_images_train + horse_images_train
 
 
+for i, test_image in enumerate(camel_images_test):
+    images_classifier.write_output_images('hsv_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_hsv(train_images, test_image), 'camel', i)
+
 for i, test_image in enumerate(dolphin_images_test):
-    images_classifier.write_output_images(test_image, images_classifier.calculate_five_most_similar_image_with_hsv(train_images, test_image), 'dolphin', i)
+    images_classifier.write_output_images('hsv_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_hsv(train_images, test_image), 'dolphin', i)
+
+for i, test_image in enumerate(dog_images_test):
+    images_classifier.write_output_images('hsv_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_hsv(train_images, test_image), 'dog', i)
+
+for i, test_image in enumerate(giraffe_images_test):
+    images_classifier.write_output_images('hsv_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_hsv(train_images, test_image), 'giraffe', i)
+
+for i, test_image in enumerate(goose_images_test):
+    images_classifier.write_output_images('hsv_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_hsv(train_images, test_image), 'goose', i)
+
+for i, test_image in enumerate(horse_images_test):
+    images_classifier.write_output_images('hsv_outputs', test_image, images_classifier.calculate_five_most_similar_image_with_hsv(train_images, test_image), 'horse', i)

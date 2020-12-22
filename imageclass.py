@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 import random
 
-PIXEL_CONST = 400
+PIXEL_CONST = 2000
 
 class ImageClass:
     def __init__(self, image):
@@ -54,21 +54,25 @@ class ImageClassifier:
 
     def create_hsv_histogram(self, images):
         for image in images:
+            hsv_image = image.image.convert('HSV')
             print(' height : ' + str(image.height) + ' width : ' + str(image.width))
             for i in range(0, image.width):
                 for j in range(0, image.height):
-                    h, s, v = image.image.convert('HSV').getpixel((i, j))
+                    h, s, v = hsv_image.getpixel((i, j))
+                    #print('h : ' + str(h) + ' s : ' + str(s) + ' v : ' + str(v))
                     image.h_histogram[h] += (1.0 / (image.width * image.height))
                     image.s_histogram[s] += (1.0 / (image.width * image.height))
                     image.v_histogram[v] += (1.0 / (image.width * image.height))
+        print('over')
 
 
     def create_rgb_histogram(self, images):
         for image in images:
+            rgb_image = image.image.convert('RGB')
             print(' height : ' + str(image.height) + ' width : ' + str(image.width))
             for i in range(0, image.width):
                 for j in range(0, image.height):
-                    r, g, b = image.image.convert('RGB').getpixel((i, j))
+                    r, g, b = rgb_image.getpixel((i, j))
                     image.r_histogram[r] += (1.0 / (image.width * image.height))
                     image.g_histogram[g] += (1.0 / (image.width * image.height))
                     image.b_histogram[b] += (1.0 / (image.width * image.height))
@@ -96,10 +100,10 @@ class ImageClassifier:
     def calculate_five_most_similar_image_with_hsv(self, train_images, test_image):
         distance_matrix = np.zeros((len(train_images), 2), dtype=object)
         for i, train in enumerate(train_images):
-            distance_r = self.calculate_euclidean_distance(test_image.h_histogram, train.r_histogram)
-            distance_g = self.calculate_euclidean_distance(test_image.s_histogram, train.g_histogram)
-            distance_b = self.calculate_euclidean_distance(test_image.v_histogram, train.b_histogram)
-            distance = np.sqrt(distance_r ** 2 + distance_g ** 2 + distance_b ** 2)
+            distance_h = self.calculate_euclidean_distance(test_image.h_histogram, train.h_histogram)
+            distance_s = self.calculate_euclidean_distance(test_image.s_histogram, train.s_histogram)
+            distance_v = self.calculate_euclidean_distance(test_image.v_histogram, train.v_histogram)
+            distance = np.sqrt(distance_h ** 2 + distance_s ** 2 + distance_v ** 2)
             distance_matrix[i][0] = train
             distance_matrix[i][1] = np.float64(distance)
         distance_matrix = distance_matrix[distance_matrix[:, 1].argsort()]
@@ -107,11 +111,7 @@ class ImageClassifier:
 
 
     def write_output_images(self, file_path, test_image, distance_matrix, tag, index):
-        test_image.image.show()
-        test_image.image.save(file_path + '\\' + tag + '_' + str(index) + '_test_image.jpg')
+        test_image.image.save(file_path + '\\' + tag + '\\' + tag + '_' + str(index) + '_test_image.jpg')
         for i, row in enumerate(distance_matrix):
-            row[0].image.show()
-            print('distance :' + str(row[1]))
-            row[0].image.save(file_path + '\\' + tag + '_' + str(index) + 'most_similar_' + str(i) + '.jpg')
-
-
+            print(tag + '_' + str(index) + '_test_image ----- ' + tag + '_' + str(index) + 'most_similar_' + str(i) + ' == > distance :' + str(row[1]))
+            row[0].image.save(file_path + '\\' + tag + '\\' + tag + '_' + str(index) + 'most_similar_' + str(i) + '.jpg')
